@@ -1,18 +1,18 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// Use DATABASE_URL if available, otherwise fall back to individual parameters
+const connectionString = process.env.DATABASE_URL || 
+  `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'annashuwa_printing',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD,
+  connectionString,
   ssl: {
     rejectUnauthorized: false
   },
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 20000,
+  connectionTimeoutMillis: 30000,
 });
 
 pool.on('connect', () => {
